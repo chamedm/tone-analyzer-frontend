@@ -1,31 +1,33 @@
 let inputForm = document.getElementById("main-form");
+let textInput = document.getElementById("textInput");
 let answerArea = document.getElementById("answer");
 
-const baseUrl = "https://tone-analyzer-backend-grateful-jackal-ar.mybluemix.net/tone";
+let baseUrl = "https://tone-analyzer-backend-proud-quoll-kh.mybluemix.net/tone";
 
 inputForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  getTone();
+  let textToAnalyze = textInput.value;
+  getTone(textToAnalyze);
 });
 
-async function getTone(){
+async function getTone(textToAnalyze){
   let options = {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        texto: inputForm.textInput.value
-    })
+    }
   };
+  baseUrl+="?text="+textToAnalyze;
 
   let response = await fetch(baseUrl, options);
+
   let data = await response.json();
+
   if (data.status == 200) {
       result = data.result;
-      answerArea.innerText = JSON.stringify(result.document_tone);
+      answerArea.innerText += JSON.stringify(result.document_tone);
       
   } else {
-    answerArea.innerText = "No se pudo completar tu solicitud :c\n" + response.status + ": " + response.statusText
+    answerArea.innerText += "\nNo se pudo completar tu solicitud :c\n" + response.status + ": " + response.statusText
   }
 }
